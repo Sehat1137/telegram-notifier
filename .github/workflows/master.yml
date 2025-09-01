@@ -1,0 +1,35 @@
+name: main
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  version:
+    name: "Release"
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install python-semantic-release
+        run: pip install python-semantic-release
+      - name: Generate version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: set-version
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          export GIT_AUTHOR_NAME="GitHub Actions"
+          export GIT_AUTHOR_EMAIL="actions@github.com"
+          export GIT_COMMITTER_NAME="GitHub Actions"
+          export GIT_COMMITTER_EMAIL="actions@github.com"
+          semantic-release version --no-vcs-release
+          echo "VERSION=$(semantic-release version --print)" >> $GITHUB_ENV
