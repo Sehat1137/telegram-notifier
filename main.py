@@ -1,4 +1,5 @@
 import dataclasses
+import html
 import os
 import re
 import sys
@@ -17,6 +18,32 @@ class Issue:
     link: str
     user: str
     body: str
+
+
+HTML_TEMPLATE = (
+    "🚀 <b>New issue created by {user}</b><br/><br/>"
+    "📌 <b>Title:</b> {title}<br/><br/>"
+    "🏷️ <b>Tags:</b> {labels}<br/><br/>"
+    "🔗 <b>Link:</b> {link}<br/><br/>"
+    "📝 <b>Description:</b><br/>{body}"
+)
+
+MD_TEMPLATE = (
+    "🚀 New issue created by {user}\n\n"
+    "📌 Title: {title}\n\n"
+    "🏷️ Tags: {labels}\n\n"
+    "🔗 Link: {link}\n\n"
+    "📝 Description:\n{body}"
+)
+
+MAGIC_SIZE_OF_TITLE = 512
+MAX_TG_MESSAGE_LENGTH = 4096
+
+
+def truncate_to_telegram_limit(body: str) -> str:
+    if len(body) > MAX_TG_MESSAGE_LENGTH - MAGIC_SIZE_OF_TITLE:
+        return "🤯 Description too long, please see details inside the issue..."
+    return body
 
 
 def get_issue_html(issue_url: str, github_token: str) -> Issue:
@@ -40,30 +67,35 @@ def get_issue_html(issue_url: str, github_token: str) -> Issue:
 
 
 def build_html_message(issue: Issue) -> str:
-    message = f"🚀 <b>New issue created by {issue.user}</b><br/><br/>"
-    message += f"📌 <b>Title:</b> {issue.title}<br/><br/>"
     labels = []
     for raw_label in issue.labels:
         parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
         parsed_label = re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
         labels.append(f"#{parsed_label}")
-    message += f"🏷️ <b>Tags:</b> {' '.join(labels)} <br/><br/>"
-    message += f"🔗 <b>Link:</b> {issue.link}<br/><br/>"
-    message += f"📝 <b>Description:</b><br/>{issue.body}"
-    return message
+    message = HTML_TEMPLATE.format(
+        user=issue.user,
+        title=issue.title,
+        labels=" ".join(labels),
+        link=issue.link,
+        body=truncate_to_telegram_limit(issue.body),
+    )
+    return html.escape(message)
 
 
 def build_markdown_message(issue: Issue) -> str:
-    message = f"🚀 New issue created by {issue.user}\n\n"
-    message += f"📌 Title: {issue.title}\n\n"
     labels = []
     for raw_label in issue.labels:
         parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
         parsed_label = re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
         labels.append(f"#{parsed_label}")
-    message += f"🏷️ Tags: {' '.join(labels)}\n\n"
-    message += f"🔗 Link: {issue.link}\n\n"
-    message += f"📝 Description:\n{issue.body}"
+
+    message = MD_TEMPLATE.format(
+        user=issue.user,
+        title=issue.title,
+        labels=" ".join(labels),
+        link=issue.link,
+        body=truncate_to_telegram_limit(issue.body),
+    )
     return message
 
 
@@ -87,7 +119,9 @@ def get_issue_markdown(issue_url: str, github_token: str) -> Issue:
     )
 
 
-def send_message_to_telegram(tg_bot_token: str, payload: dict, attempt_count: int) -> bool:
+def send_message_to_telegram(
+    tg_bot_token: str, payload: dict, attempt_count: int
+) -> bool:
     count = 0
     url = f"https://api.telegram.org/bot{tg_bot_token}/sendMessage"
     while count < attempt_count:
