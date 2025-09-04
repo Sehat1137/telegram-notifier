@@ -25,11 +25,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: set-version
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          export GIT_AUTHOR_NAME="GitHub Actions"
-          export GIT_AUTHOR_EMAIL="actions@github.com"
-          export GIT_COMMITTER_NAME="GitHub Actions"
-          export GIT_COMMITTER_EMAIL="actions@github.com"
-          semantic-release version --no-vcs-release
-          echo "VERSION=$(semantic-release version --print)" >> $GITHUB_ENV
+          export GIT_COMMIT_AUTHOR="GitHub Actions <actions@github.com>"
+          semantic-release version
