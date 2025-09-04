@@ -90,7 +90,7 @@ def get_issue_markdown(issue_url: str, github_token: str) -> Issue:
 def send_message_to_telegram(tg_bot_token: str, payload: dict, attempt_count: int) -> bool:
     count = 0
     url = f"https://api.telegram.org/bot{tg_bot_token}/sendMessage"
-    while count < 10:
+    while count < attempt_count:
         try:
             response = requests.post(url, json=payload, timeout=30)
             pprint(response.json())
