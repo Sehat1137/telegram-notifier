@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.2.1 (2025-09-05)
+
+### Bug Fixes
+
+- Error if we have empty template
+  ([`6992f9b`](https://github.com/Sehat1137/telegram-notifier/commit/6992f9bf36a04400a335b1a330992ad8be751da7))
+
+### Documentation
+
+- Update
+  ([`01ab008`](https://github.com/Sehat1137/telegram-notifier/commit/01ab008dba34b290b45e7de349c4ea8b43b7e71e))
+
+
 ## v1.2.0 (2025-09-05)
 
 ### Features
