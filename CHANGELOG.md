@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.2 (2025-09-05)
+
+### Bug Fixes
+
+- Support thread
+  ([`5eed143`](https://github.com/Sehat1137/telegram-notifier/commit/5eed1439c25b49012f5c9e38ce5b78c1793014ed))
+
+
 ## v1.2.1 (2025-09-05)
 
 ### Bug Fixes
