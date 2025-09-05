@@ -34,20 +34,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram notification for new issue
-        uses: sehat1137/telegram-notifier@v1.0.0
+        uses: sehat1137/telegram-notifier@v1.2.1
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          tg-chat-id: ${{ env.TELEGRAM_CHAT_ID }}
+          tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 ### Advanced Configuration
 
 ```yaml
 - name: Send Telegram notification for new issue
-  uses: sehat1137/telegram-notifier@v1.0.0
+  uses: sehat1137/telegram-notifier@v1.2.1
   with:
     tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-    tg-chat-id: ${{ env.TELEGRAM_CHAT_ID }}
+    tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
     base-url: "https://github.com/your-org/your-repo"
     python-version: "3.10"
