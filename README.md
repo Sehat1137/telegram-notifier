@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram notification for new issue
-        uses: sehat1137/telegram-notifier@v1.2.1
+        uses: sehat1137/telegram-notifier@v1.2.2
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
@@ -44,7 +44,7 @@ jobs:
 
 ```yaml
 - name: Send Telegram notification for new issue
-  uses: sehat1137/telegram-notifier@v1.2.1
+  uses: sehat1137/telegram-notifier@v1.2.2
   with:
     tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
@@ -52,6 +52,8 @@ jobs:
     base-url: "https://github.com/your-org/your-repo"
     python-version: "3.10"
     attempt-count: "5"
+    # if you have topics
+    telegram-message-thread-id: 2
     # by default templates exist, these parameters override them
     html-template: '🚀 <b>New issue created by {user}</b><br/><br/> 📌 <b>Title:</b> {title}<br/><br/>" 🏷️ <b>Tags:</b>{labels}<br/><br/> 🔗 <b>Link:</b> {link}<br/><br/> 📝 <b>Description:</b><br/><br/>{body}'
     md-template: '🚀 New issue created by {user}\n\n" 📌 Title: {title}\n\n" 🏷️ Tags: {labels}\n\n" 🔗 Link: {link}\n\n 📝 Description:\n\n{body}'

@@ -9,6 +9,9 @@ inputs:
   tg-chat-id:
     description: "Telegram Chat ID"
     required: true
+  tg-message-thread-id:
+    description: "Telegram Message Thread ID"
+    required: false
   github-token:
     description: "GitHub Token for API access"
     required: true
@@ -59,6 +62,7 @@ runs:
         HTML_TEMPLATE: ${{ inputs.html-template }}
         MD_TEMPLATE: ${{ inputs.md-template }}
         TRIGGER_LABELS: ${{ inputs.trigger-labels }}
+        TELEGRAM_MESSAGE_THREAD_ID: ${{ inputs.tg-message-thread-id }}
       run: |
         python3 $GITHUB_ACTION_PATH/main.py
 

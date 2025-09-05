@@ -25,6 +25,7 @@ class TelegramConfig:
     chat_id: str
     bot_token: str
     attempt_count: int
+    message_thread_id: str | int | None
 
 
 MAGIC_SIZE_OF_META: typing.Final = 512
@@ -157,6 +158,8 @@ def send_html_message(html_issue: Issue, template: str, tg: TelegramConfig) -> b
             "entities": html_message.entities,
             "disable_web_page_preview": True,
         }
+        if tg.message_thread_id:
+            payload["message_thread_id"] = tg.message_thread_id
 
         return send_message_to_telegram(tg.bot_token, payload, tg.attempt_count)
     except Exception:
@@ -172,6 +175,8 @@ def send_md_message(md_issue: Issue, template: str, tg: TelegramConfig) -> bool:
         "text": md_message,
         "disable_web_page_preview": True,
     }
+    if tg.message_thread_id:
+        payload["message_thread_id"] = tg.message_thread_id
     return send_message_to_telegram(tg.bot_token, payload, tg.attempt_count)
 
 
@@ -180,6 +185,7 @@ if __name__ == "__main__":
         chat_id=os.environ["TELEGRAM_CHAT_ID"],
         bot_token=os.environ["TELEGRAM_BOT_TOKEN"],
         attempt_count=int(os.environ["ATTEMPT_COUNT"]),
+        message_thread_id=os.environ.get("TELEGRAM_MESSAGE_THREAD_ID"),
     )
     GITHUB_TOKEN: typing.Final = os.environ["GITHUB_TOKEN"]
     ISSUE_URL: typing.Final = os.environ["ISSUE_URL"]
