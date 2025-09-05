@@ -22,13 +22,13 @@ class Issue:
 
 @dataclasses.dataclass(kw_only=True)
 class TelegramConfig:
-    chat_id: int
+    chat_id: str
     bot_token: str
     attempt_count: int
 
 
-MAGIC_SIZE_OF_TITLE: typing.Final[int] = 512
-MAX_TG_MESSAGE_LENGTH: typing.Final[int] = 4096
+MAGIC_SIZE_OF_META: typing.Final = 512
+MAX_TG_MESSAGE_LENGTH: typing.Final = 4096
 
 
 def parse_label(raw_label: str) -> str:
@@ -48,7 +48,7 @@ def parse_label(raw_label: str) -> str:
 
 
 def truncate_to_telegram_limit(body: str) -> str:
-    if len(body) > MAX_TG_MESSAGE_LENGTH - MAGIC_SIZE_OF_TITLE:
+    if len(body) > MAX_TG_MESSAGE_LENGTH - MAGIC_SIZE_OF_META:
         return "Description too long, please see details inside the issue..."
     return body
 
@@ -176,30 +176,32 @@ def send_md_message(md_issue: Issue, template: str, tg: TelegramConfig) -> bool:
 
 
 if __name__ == "__main__":
-    TELEGRAM_CONFIG: typing.Final[TelegramConfig] = TelegramConfig(
-        chat_id=int(os.environ["TELEGRAM_CHAT_ID"]),
+    TELEGRAM_CONFIG: typing.Final = TelegramConfig(
+        chat_id=os.environ["TELEGRAM_CHAT_ID"],
         bot_token=os.environ["TELEGRAM_BOT_TOKEN"],
         attempt_count=int(os.environ["ATTEMPT_COUNT"]),
     )
-    GITHUB_TOKEN: typing.Final[str] = os.environ["GITHUB_TOKEN"]
-    ISSUE_URL: typing.Final[str] = os.environ["ISSUE_URL"]
-    HTML_TEMPLATE: typing.Final[str] = os.environ.get(
+    GITHUB_TOKEN: typing.Final = os.environ["GITHUB_TOKEN"]
+    ISSUE_URL: typing.Final = os.environ["ISSUE_URL"]
+    HTML_TEMPLATE: typing.Final = os.environ.get(
         "HTML_TEMPLATE",
         "🚀 <b>New issue created by {user}</b><br/><br/>"
         "📌 <b>Title:</b> {title}<br/><br/>"
         "🏷️ <b>Tags:</b> {labels}<br/><br/>"
         "🔗 <b>Link:</b> {link}<br/><br/>"
-        "📝 <b>Description:</b><br/><br/>{body}",
+        "📝 <b>Description:</b><br/><br/>{body}"
+        "<br/><br/><b>sent via</b> https://github.com/Sehat1137/telegram-notifier",
     )
-    MD_TEMPLATE: typing.Final[str] = os.environ.get(
+    MD_TEMPLATE: typing.Final = os.environ.get(
         "MD_TEMPLATE",
         "🚀 New issue created by {user}\n\n"
         "📌 Title: {title}\n\n"
         "🏷️ Tags: {labels}\n\n"
         "🔗 Link: {link}\n\n"
-        "📝 Description:\n\n{body}",
+        "📝 Description:\n\n{body}"
+        "\n\nsent via https://github.com/Sehat1137/telegram-notifier",
     )
-    TRIGGER_LABELS: typing.Final[set] = {
+    TRIGGER_LABELS: typing.Final = {
         parse_label(raw_label)
         for raw_label in os.environ.get("TRIGGER_LABELS", "").split(";")
         if parse_label(raw_label)
