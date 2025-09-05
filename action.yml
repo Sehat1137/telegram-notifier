@@ -24,6 +24,12 @@ inputs:
     description: "Telegram API attempt count"
     required: false
     default: "10"
+  html-template:
+    description: "HTML template for Telegram message"
+    required: false
+  md-template:
+    description: "Markdown template for Telegram message"
+    required: false
 
 runs:
   using: "composite"
@@ -47,6 +53,8 @@ runs:
         ISSUE_URL: ${{ github.event.issue.url }}
         BASE_URL: ${{ inputs.base-url }}
         ATTEMPT_COUNT: ${{ inputs.attempt-count }}
+        HTML_TEMPLATE: ${{ inputs.html-template }}
+        MD_TEMPLATE: ${{ inputs.md-template }}
       run: |
         python3 $GITHUB_ACTION_PATH/main.py
 

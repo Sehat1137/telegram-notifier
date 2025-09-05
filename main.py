@@ -1,5 +1,4 @@
 import dataclasses
-import html
 import os
 import re
 import sys
@@ -25,7 +24,7 @@ HTML_TEMPLATE = (
     "📌 <b>Title:</b> {title}<br/><br/>"
     "🏷️ <b>Tags:</b> {labels}<br/><br/>"
     "🔗 <b>Link:</b> {link}<br/><br/>"
-    "📝 <b>Description:</b><br/>{body}"
+    "📝 <b>Description:</b><br/><br/>{body}"
 )
 
 MD_TEMPLATE = (
@@ -33,7 +32,7 @@ MD_TEMPLATE = (
     "📌 Title: {title}\n\n"
     "🏷️ Tags: {labels}\n\n"
     "🔗 Link: {link}\n\n"
-    "📝 Description:\n{body}"
+    "📝 Description:\n\n{body}"
 )
 
 MAGIC_SIZE_OF_TITLE = 512
@@ -42,7 +41,7 @@ MAX_TG_MESSAGE_LENGTH = 4096
 
 def truncate_to_telegram_limit(body: str) -> str:
     if len(body) > MAX_TG_MESSAGE_LENGTH - MAGIC_SIZE_OF_TITLE:
-        return "🤯 Description too long, please see details inside the issue..."
+        return "Description too long, please see details inside the issue..."
     return body
 
 
@@ -66,30 +65,30 @@ def get_issue_html(issue_url: str, github_token: str) -> Issue:
     )
 
 
-def build_html_message(issue: Issue) -> str:
+def build_html_message(issue: Issue, template: str) -> str:
     labels = []
     for raw_label in issue.labels:
         parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
         parsed_label = re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
         labels.append(f"#{parsed_label}")
-    message = HTML_TEMPLATE.format(
+    message = template.format(
         user=issue.user,
         title=issue.title,
         labels=" ".join(labels),
         link=issue.link,
         body=truncate_to_telegram_limit(issue.body),
     )
-    return html.escape(message)
+    return message
 
 
-def build_markdown_message(issue: Issue) -> str:
+def build_markdown_message(issue: Issue, template: str) -> str:
     labels = []
     for raw_label in issue.labels:
         parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
         parsed_label = re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
         labels.append(f"#{parsed_label}")
 
-    message = MD_TEMPLATE.format(
+    message = template.format(
         user=issue.user,
         title=issue.title,
         labels=" ".join(labels),
@@ -144,10 +143,12 @@ if __name__ == "__main__":
     ISSUE_URL = os.environ["ISSUE_URL"]
     TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
     TELEGRAM_CHAT_ID = int(os.environ["TELEGRAM_CHAT_ID"])
+    HTML_TEMPLATE = os.environ.get("HTML_TEMPLATE", HTML_TEMPLATE)
+    MD_TEMPLATE = os.environ.get("MD_TEMPLATE", MD_TEMPLATE)
 
     html_issue = get_issue_html(ISSUE_URL, GITHUB_TOKEN)
     html_message = sulguk.transform_html(
-        build_html_message(html_issue), base_url="https://github.com"
+        build_html_message(html_issue, HTML_TEMPLATE), base_url="https://github.com"
     )
     for e in html_message.entities:
         e.pop("language", None)
@@ -164,7 +165,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     md_issue = get_issue_markdown(ISSUE_URL, GITHUB_TOKEN)
-    md_message = build_markdown_message(md_issue)
+    md_message = build_markdown_message(md_issue, MD_TEMPLATE)
 
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
