@@ -5,6 +5,7 @@ import sys
 import time
 import traceback
 from pprint import pprint
+import typing
 
 import requests
 import sulguk
@@ -13,30 +14,37 @@ import sulguk
 @dataclasses.dataclass(kw_only=True)
 class Issue:
     title: str
-    labels: list[str]
+    labels: set[str]
     link: str
     user: str
     body: str
 
 
-HTML_TEMPLATE = (
-    "🚀 <b>New issue created by {user}</b><br/><br/>"
-    "📌 <b>Title:</b> {title}<br/><br/>"
-    "🏷️ <b>Tags:</b> {labels}<br/><br/>"
-    "🔗 <b>Link:</b> {link}<br/><br/>"
-    "📝 <b>Description:</b><br/><br/>{body}"
-)
+@dataclasses.dataclass(kw_only=True)
+class TelegramConfig:
+    chat_id: int
+    bot_token: str
+    attempt_count: int
 
-MD_TEMPLATE = (
-    "🚀 New issue created by {user}\n\n"
-    "📌 Title: {title}\n\n"
-    "🏷️ Tags: {labels}\n\n"
-    "🔗 Link: {link}\n\n"
-    "📝 Description:\n\n{body}"
-)
 
-MAGIC_SIZE_OF_TITLE = 512
-MAX_TG_MESSAGE_LENGTH = 4096
+MAGIC_SIZE_OF_TITLE: typing.Final[int] = 512
+MAX_TG_MESSAGE_LENGTH: typing.Final[int] = 4096
+
+
+def parse_label(raw_label: str) -> str:
+    """
+    Bug Report -> bug_report
+    high-priority -> high_priority
+    Feature Request!!! -> feature_request
+    Version 2.0 -> version_20
+    Critical Bug - Urgent!!! -> critical_bug___urgent
+    Багрепорт - ...
+    already_normalized -> already_normalized
+    Test@#$%^&*()Label -> testlabel
+    ... -> ...
+    """
+    parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
+    return re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
 
 
 def truncate_to_telegram_limit(body: str) -> str:
@@ -58,40 +66,36 @@ def get_issue_html(issue_url: str, github_token: str) -> Issue:
     issue_data = response.json()
     return Issue(
         title=issue_data["title"],
-        labels=[label["name"] for label in issue_data["labels"]],
+        labels={
+            parse_label(label["name"])
+            for label in issue_data["labels"]
+            if parse_label(label["name"])
+        },
         link=issue_data["html_url"],
         user=issue_data["user"]["login"],
         body=issue_data["body_html"],
     )
 
 
-def build_html_message(issue: Issue, template: str) -> str:
-    labels = []
-    for raw_label in issue.labels:
-        parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
-        parsed_label = re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
-        labels.append(f"#{parsed_label}")
+def build_html_message(issue: Issue, template: str) -> sulguk.RenderResult:
     message = template.format(
         user=issue.user,
         title=issue.title,
-        labels=" ".join(labels),
+        labels=" ".join(f"#{label}" for label in issue.labels),
         link=issue.link,
         body=truncate_to_telegram_limit(issue.body),
     )
-    return message
+    return sulguk.transform_html(message, base_url="https://github.com")
 
 
 def build_markdown_message(issue: Issue, template: str) -> str:
-    labels = []
-    for raw_label in issue.labels:
-        parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
-        parsed_label = re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
-        labels.append(f"#{parsed_label}")
+    body = truncate_to_telegram_limit(issue.body)
+    body = re.sub(r'[^\w\sа-яА-ЯёЁ.,!?;:()\-+=\*@#%&$/"\'<>\[\]{}`~|\\]', "", body)
 
     message = template.format(
         user=issue.user,
         title=issue.title,
-        labels=" ".join(labels),
+        labels=" ".join(f"#{label}" for label in issue.labels),
         link=issue.link,
         body=truncate_to_telegram_limit(issue.body),
     )
@@ -111,7 +115,11 @@ def get_issue_markdown(issue_url: str, github_token: str) -> Issue:
 
     return Issue(
         title=issue_data["title"],
-        labels=[label["name"] for label in issue_data["labels"]],
+        labels={
+            parse_label(label["name"])
+            for label in issue_data["labels"]
+            if parse_label(label["name"])
+        },
         link=issue_data["html_url"],
         user=issue_data["user"]["login"],
         body=issue_data["body"],
@@ -137,43 +145,75 @@ def send_message_to_telegram(
     return False
 
 
-if __name__ == "__main__":
-    ATTEMPT_COUNT = int(os.environ["ATTEMPT_COUNT"])
-    GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
-    ISSUE_URL = os.environ["ISSUE_URL"]
-    TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-    TELEGRAM_CHAT_ID = int(os.environ["TELEGRAM_CHAT_ID"])
-    HTML_TEMPLATE = os.environ.get("HTML_TEMPLATE", HTML_TEMPLATE)
-    MD_TEMPLATE = os.environ.get("MD_TEMPLATE", MD_TEMPLATE)
+def send_html_message(html_issue: Issue, template: str, tg: TelegramConfig) -> bool:
+    try:
+        html_message = build_html_message(html_issue, template)
+        for e in html_message.entities:
+            e.pop("language", None)
 
-    html_issue = get_issue_html(ISSUE_URL, GITHUB_TOKEN)
-    html_message = sulguk.transform_html(
-        build_html_message(html_issue, HTML_TEMPLATE), base_url="https://github.com"
-    )
-    for e in html_message.entities:
-        e.pop("language", None)
+        payload = {
+            "chat_id": tg.chat_id,
+            "text": html_message.text,
+            "entities": html_message.entities,
+            "disable_web_page_preview": True,
+        }
 
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": html_message.text,
-        "entities": html_message.entities,
-        "disable_web_page_preview": True,
-    }
+        return send_message_to_telegram(tg.bot_token, payload, tg.attempt_count)
+    except Exception:
+        traceback.print_exc()
+        return False
 
-    result = send_message_to_telegram(TELEGRAM_BOT_TOKEN, payload, ATTEMPT_COUNT)
-    if result:
-        sys.exit(0)
 
-    md_issue = get_issue_markdown(ISSUE_URL, GITHUB_TOKEN)
-    md_message = build_markdown_message(md_issue, MD_TEMPLATE)
+def send_md_message(md_issue: Issue, template: str, tg: TelegramConfig) -> bool:
+    md_message = build_markdown_message(md_issue, template)
 
     payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
+        "chat_id": tg.chat_id,
         "text": md_message,
         "disable_web_page_preview": True,
     }
-    result = send_message_to_telegram(TELEGRAM_BOT_TOKEN, payload, ATTEMPT_COUNT)
-    if result:
+    return send_message_to_telegram(tg.bot_token, payload, tg.attempt_count)
+
+
+if __name__ == "__main__":
+    TELEGRAM_CONFIG: typing.Final[TelegramConfig] = TelegramConfig(
+        chat_id=int(os.environ["TELEGRAM_CHAT_ID"]),
+        bot_token=os.environ["TELEGRAM_BOT_TOKEN"],
+        attempt_count=int(os.environ["ATTEMPT_COUNT"]),
+    )
+    GITHUB_TOKEN: typing.Final[str] = os.environ["GITHUB_TOKEN"]
+    ISSUE_URL: typing.Final[str] = os.environ["ISSUE_URL"]
+    HTML_TEMPLATE: typing.Final[str] = os.environ.get(
+        "HTML_TEMPLATE",
+        "🚀 <b>New issue created by {user}</b><br/><br/>"
+        "📌 <b>Title:</b> {title}<br/><br/>"
+        "🏷️ <b>Tags:</b> {labels}<br/><br/>"
+        "🔗 <b>Link:</b> {link}<br/><br/>"
+        "📝 <b>Description:</b><br/><br/>{body}",
+    )
+    MD_TEMPLATE: typing.Final[str] = os.environ.get(
+        "MD_TEMPLATE",
+        "🚀 New issue created by {user}\n\n"
+        "📌 Title: {title}\n\n"
+        "🏷️ Tags: {labels}\n\n"
+        "🔗 Link: {link}\n\n"
+        "📝 Description:\n\n{body}",
+    )
+    TRIGGER_LABELS: typing.Final[set] = {
+        parse_label(raw_label)
+        for raw_label in os.environ.get("TRIGGER_LABELS", "").split(";")
+        if parse_label(raw_label)
+    }
+
+    html_issue = get_issue_html(ISSUE_URL, GITHUB_TOKEN)
+
+    if len(TRIGGER_LABELS) > 0 and not TRIGGER_LABELS & html_issue.labels:
         sys.exit(0)
 
-    sys.exit(1)
+    if succes := send_html_message(html_issue, HTML_TEMPLATE, TELEGRAM_CONFIG):
+        sys.exit(0)
+
+    md_issue = get_issue_markdown(ISSUE_URL, GITHUB_TOKEN)
+
+    if not send_md_message(md_issue, MD_TEMPLATE, TELEGRAM_CONFIG):
+        sys.exit(1)

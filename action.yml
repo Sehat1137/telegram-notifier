@@ -30,6 +30,9 @@ inputs:
   md-template:
     description: "Markdown template for Telegram message"
     required: false
+  trigger-labels:
+    description: "Labels to trigger Telegram notification. If not provided, all issues will be notified."
+    required: false
 
 runs:
   using: "composite"
@@ -55,6 +58,7 @@ runs:
         ATTEMPT_COUNT: ${{ inputs.attempt-count }}
         HTML_TEMPLATE: ${{ inputs.html-template }}
         MD_TEMPLATE: ${{ inputs.md-template }}
+        TRIGGER_LABELS: ${{ inputs.trigger-labels }}
       run: |
         python3 $GITHUB_ACTION_PATH/main.py
 
