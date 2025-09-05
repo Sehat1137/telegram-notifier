@@ -79,28 +79,40 @@ def get_issue_html(issue_url: str, github_token: str) -> Issue:
 
 
 def build_html_message(issue: Issue, template: str) -> sulguk.RenderResult:
+    labels = ""
+    if issue.labels:
+        labels = (
+            f"🏷️ <b>Tags:</b> {' '.join(f'#{label}' for label in issue.labels)}<br/>"
+        )
+
     message = template.format(
         user=issue.user,
         title=issue.title,
-        labels=" ".join(f"#{label}" for label in issue.labels),
+        labels=labels,
         link=issue.link,
         body=truncate_to_telegram_limit(issue.body),
     )
-    return sulguk.transform_html(message, base_url="https://github.com")
+    return sulguk.transform_html(
+        f"{message}<b><a href='https://github.com/Sehat1137/telegram-notifier'>sent via telegram-notifier</a></b>",
+        base_url="https://github.com",
+    )
 
 
 def build_markdown_message(issue: Issue, template: str) -> str:
     body = truncate_to_telegram_limit(issue.body)
     body = re.sub(r'[^\w\sа-яА-ЯёЁ.,!?;:()\-+=\*@#%&$/"\'<>\[\]{}`~|\\]', "", body)
+    labels = ""
+    if issue.labels:
+        labels = f"🏷️ Tags: {' '.join(f'#{label}' for label in issue.labels)}\n"
 
     message = template.format(
         user=issue.user,
         title=issue.title,
-        labels=" ".join(f"#{label}" for label in issue.labels),
+        labels=labels,
         link=issue.link,
         body=truncate_to_telegram_limit(issue.body),
     )
-    return message
+    return f"{message}\n[sent via telegram-notifier](https://github.com/Sehat1137/telegram-notifier)"
 
 
 def get_issue_markdown(issue_url: str, github_token: str) -> Issue:
@@ -174,6 +186,7 @@ def send_md_message(md_issue: Issue, template: str, tg: TelegramConfig) -> bool:
         "chat_id": tg.chat_id,
         "text": md_message,
         "disable_web_page_preview": True,
+        "parse_mode": "Markdown",
     }
     if tg.message_thread_id:
         payload["message_thread_id"] = tg.message_thread_id
@@ -191,21 +204,19 @@ if __name__ == "__main__":
     ISSUE_URL: typing.Final = os.environ["ISSUE_URL"]
     HTML_TEMPLATE: typing.Final = (
         os.environ.get("HTML_TEMPLATE", "").strip()
-        or "🚀 <b>New issue created by {user}</b><br/><br/>"
-        "📌 <b>Title:</b> {title}<br/><br/>"
-        "🏷️ <b>Tags:</b> {labels}<br/><br/>"
-        "🔗 <b>Link:</b> {link}<br/><br/>"
-        "📝 <b>Description:</b><br/><br/>{body}"
-        "<br/><br/><b>sent via</b> https://github.com/Sehat1137/telegram-notifier"
+        or "🚀 <b>New issue created by {user}</b><br/>"
+        "📌 <b>Title:</b> {title}<br/>"
+        "{labels}"
+        "🔗 <b>Link:</b> {link}<br/>"
+        "📝 <b>Description:</b><br/>{body}"
     )
     MD_TEMPLATE: typing.Final = (
         os.environ.get("MD_TEMPLATE", "").strip()
-        or "🚀 New issue created by {user}\n\n"
-        "📌 Title: {title}\n\n"
-        "🏷️ Tags: {labels}\n\n"
-        "🔗 Link: {link}\n\n"
-        "📝 Description:\n\n{body}"
-        "\n\nsent via https://github.com/Sehat1137/telegram-notifier"
+        or "🚀 New issue created by {user}\n"
+        "📌 Title: {title}\n"
+        "{labels}"
+        "🔗 Link: {link}\n"
+        "📝 Description:\n{body}"
     )
     TRIGGER_LABELS: typing.Final = {
         parse_label(raw_label)
