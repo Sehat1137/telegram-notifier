@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.2.3 (2025-09-05)
+
+### Bug Fixes
+
+- Change message format
+  ([`956ea49`](https://github.com/Sehat1137/telegram-notifier/commit/956ea49cc81b95f3391de801b9df601b686e6023))
+
+### Documentation
+
+- Update
+  ([`2052255`](https://github.com/Sehat1137/telegram-notifier/commit/205225577f72860bfb821ac9b6dcfb7de3ad09c0))
+
+
 ## v1.2.2 (2025-09-05)
 
 ### Bug Fixes
