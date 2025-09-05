@@ -183,23 +183,23 @@ if __name__ == "__main__":
     )
     GITHUB_TOKEN: typing.Final = os.environ["GITHUB_TOKEN"]
     ISSUE_URL: typing.Final = os.environ["ISSUE_URL"]
-    HTML_TEMPLATE: typing.Final = os.environ.get(
-        "HTML_TEMPLATE",
-        "🚀 <b>New issue created by {user}</b><br/><br/>"
+    HTML_TEMPLATE: typing.Final = (
+        os.environ.get("HTML_TEMPLATE", "").strip()
+        or "🚀 <b>New issue created by {user}</b><br/><br/>"
         "📌 <b>Title:</b> {title}<br/><br/>"
         "🏷️ <b>Tags:</b> {labels}<br/><br/>"
         "🔗 <b>Link:</b> {link}<br/><br/>"
         "📝 <b>Description:</b><br/><br/>{body}"
-        "<br/><br/><b>sent via</b> https://github.com/Sehat1137/telegram-notifier",
+        "<br/><br/><b>sent via</b> https://github.com/Sehat1137/telegram-notifier"
     )
-    MD_TEMPLATE: typing.Final = os.environ.get(
-        "MD_TEMPLATE",
-        "🚀 New issue created by {user}\n\n"
+    MD_TEMPLATE: typing.Final = (
+        os.environ.get("MD_TEMPLATE", "").strip()
+        or "🚀 New issue created by {user}\n\n"
         "📌 Title: {title}\n\n"
         "🏷️ Tags: {labels}\n\n"
         "🔗 Link: {link}\n\n"
         "📝 Description:\n\n{body}"
-        "\n\nsent via https://github.com/Sehat1137/telegram-notifier",
+        "\n\nsent via https://github.com/Sehat1137/telegram-notifier"
     )
     TRIGGER_LABELS: typing.Final = {
         parse_label(raw_label)
