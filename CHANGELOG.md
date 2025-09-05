@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.0 (2025-09-05)
+
+### Features
+
+- Add topic support
+  ([`42ac3d6`](https://github.com/Sehat1137/telegram-notifier/commit/42ac3d6e5565de522ba428ca1ca4e2ab7a8af328))
+
+
 ## v1.1.0 (2025-09-05)
 
 ### Bug Fixes
