@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.4 (2025-10-02)
+
+### Bug Fixes
+
+- Refactor action into modular components and update templates
+  ([`41b6df2`](https://github.com/Sehat1137/telegram-notifier/commit/41b6df23fa6fe9c4defb49e5217d47d6f3feee12))
+
+
 ## v1.2.3 (2025-09-05)
 
 ### Bug Fixes
