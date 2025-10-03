@@ -1,11 +1,12 @@
-import typing
 import os
+import typing
+
+from notifier import issue
 from notifier.telegram import Telegram
 from notifier.github import Github
-from notifier import issue
 
-# Maximum length of a message in Telegram - 512 bytes for metadata
-MAX_TG_MESSAGE_LENGTH: typing.Final = 4096 - 512
+# Maximum length of a message in Telegram
+MAX_TG_MESSAGE_LENGTH: typing.Final = 4096
 
 
 if __name__ == "__main__":

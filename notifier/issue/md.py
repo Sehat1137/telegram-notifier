@@ -1,7 +1,8 @@
+import md2tgmd
+
 from notifier.github import Github
 from notifier.telegram import Telegram
-
-import md2tgmd
+from notifier.entity import Issue
 
 
 class MD:
@@ -27,22 +28,25 @@ class MD:
     def _build_message(self) -> str:
         issue = self._github.get_md_issue()
 
-        if len(issue.body) > self._limit:
-            issue.body = ""
-        else:
-            issue.body += "\n"
-
         labels = ""
         if issue.labels:
             labels = f"\n{' '.join(f'#{label}' for label in issue.labels)}"
 
-        message = self._template.format(
+        message = self._create_message(issue, f"{issue.body}\n", labels)
+        result = md2tgmd.escape(message)
+        if len(result) <= self._limit:
+            return result
+
+        message_with_body = self._create_message(issue, "", labels)
+        return md2tgmd.escape(message_with_body)
+
+    def _create_message(self, issue: Issue, body: str, labels: str) -> str:
+        return self._template.format(
             id=issue.id,
             user=issue.user,
             title=issue.title,
             labels=labels,
             url=issue.url,
-            body=issue.body,
+            body=body,
             promo="[sent via telegram-notifier](https://github.com/Sehat1137/telegram-notifier)",
         )
-        return md2tgmd.escape(message)

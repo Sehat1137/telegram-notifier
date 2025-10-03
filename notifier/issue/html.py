@@ -1,6 +1,8 @@
 import sulguk
+
 from notifier.github import Github
 from notifier.telegram import Telegram
+from notifier.entity import Issue
 
 
 class HTML:
@@ -27,23 +29,32 @@ class HTML:
     def _build_message(self) -> sulguk.RenderResult:
         issue = self._github.get_html_issue()
 
-        if len(issue.body) > self._limit:
-            issue.body = "<br/>"
-
         labels = ""
         if issue.labels:
             labels = f"{' '.join(f'#{label}' for label in issue.labels)}"
 
-        message = self._template.format(
+        message = self._create_message(issue, issue.body, labels)
+        render_result = sulguk.transform_html(
+            message,
+            base_url="https://github.com",
+        )
+        if len(render_result.text) <= self._limit:
+            return render_result
+
+        message_without_description = self._create_message(issue, "<br/>", labels)
+
+        return sulguk.transform_html(
+            message_without_description,
+            base_url="https://github.com",
+        )
+
+    def _create_message(self, issue: Issue, body: str, labels: str) -> str:
+        return self._template.format(
             id=issue.id,
             user=issue.user,
             title=issue.title,
             labels=labels,
             url=issue.url,
-            body=issue.body,
+            body=body,
             promo="<a href='/Sehat1137/telegram-notifier'>sent via telegram-notifier</a>",
-        )
-        return sulguk.transform_html(
-            message,
-            base_url="https://github.com",
         )
