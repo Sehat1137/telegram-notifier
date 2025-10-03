@@ -6,15 +6,13 @@
 
 A GitHub Action that sends beautifully formatted Telegram notifications when new issues are created in your repository. Get instant alerts with issue details, labels as hashtags, and clean formatting.
 
-
 ## ✨ Features
 
-* **Instant Notifications**: Get real-time alerts for new issues
-* **Rich Formatting**: Clean HTML formatting with issue details
-* **Label Support**: Automatically converts GitHub labels to Telegram hashtags
-* **Customizable**: Multiple configuration options for different needs
-* **Reliable**: Built-in retry mechanism for Telegram API
-
+- **Instant Notifications**: Get real-time alerts for new issues
+- **Rich Formatting**: Clean HTML formatting with issue details
+- **Label Support**: Automatically converts GitHub labels to Telegram hashtags
+- **Customizable**: Multiple configuration options for different needs
+- **Reliable**: Built-in retry mechanism for Telegram API
 
 ## 🚀 Quick Start
 
@@ -40,6 +38,7 @@ jobs:
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
+
 ### Advanced Configuration
 
 ```yaml
@@ -55,57 +54,58 @@ jobs:
     # if you have topics
     telegram-message-thread-id: 2
     # by default templates exist, these parameters override them
-    html-template: '<b>New issue created by {user}</b><br/><b>Title:</b>{title}<br/>"{labels}<br/><b>Link:</b>{link}<br/><b>Description:</b><br/>{body}'
-    md-template: 'New issue created by {user}\nTitle: {title}\n{labels}\nLink: {link}\nDescription:\n{body}'
-    ###
-    trigger-labels: "bug;good first issue;enhancement"
+    html-template: "<b>New issue by <a href=/{user}>@{user}</a> </b><br/><b>{title}</b> (<a href='{url}'>#{id}</a>)<br/>{body}{labels}<br/>{promo}"
+    md-template: '**New issue by [@{user}](https://github.com/{user})**\n**{title}** ([#{id}]({url}))\n\n{body}{labels}\n{promo}'
 ```
 
 ## 🔧 Setup Instructions
+
 1. Create a Telegram Bot
-* Message `@BotFather` on [Telegram](https://t.me/botfather)
-* Create a new bot with `/newbot`
-* Save the bot token
+
+- Message `@BotFather` on [Telegram](https://t.me/botfather)
+- Create a new bot with `/newbot`
+- Save the bot token
+
 2. Get Chat ID
-* Add your bot to the desired chat
-* Send a message in the chat
-* Visit `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
-* Find the chat.id in the response
+
+- Add your bot to the desired chat
+- Send a message in the chat
+- Visit `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
+- Find the chat.id in the response
+
 3. Configure GitHub Secrets
-Add these secrets in your repository settings:
-* `TELEGRAM_BOT_TOKEN`
-* `TELEGRAM_CHAT_ID`
+   Add these secrets in your repository settings:
+
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_ID`
 
 ## 📋 Example Output
 
 Your Telegram notifications will look like this:
 
 ```text
-🚀 New issue created by username
-📌 Title: Bug in authentication module
-🏷️ Tags: #bug #high_priority #authentication
-🔗 Link: https://github.com/owner/repo/issues/123
+🚀 New issue by @username
+📌 Bug in authentication module (#123)
 
-📝 Description:
 [Issue description content here...]
 
+#bug #high_priority #authentication
 sent via telegram-notifier
 ```
 
 ## 🤝 Acknowledgments
 
 This action uses the excellent [sulguk](https://github.com/Tishka17/sulguk) library by `@Tishka17` for reliable Telegram message delivery. Special thanks to the author for creating and maintaining this wonderful library!
-
+We also thank the authors of the [md2tgmd](https://github.com/yym68686/md2tgmd) library for their work. Special thanks to the authors for creating and maintaining these wonderful libraries!
 
 ## 🌟 Support
 
 If you find this action useful, please consider:
 
-* ⭐ Starring the repository on GitHub
-* 🐛 Reporting issues if you find any bugs
-* 💡 Suggesting features for future improvements
-* 🔄 Sharing with your developer community
-
+- ⭐ Starring the repository on GitHub
+- 🐛 Reporting issues if you find any bugs
+- 💡 Suggesting features for future improvements
+- 🔄 Sharing with your developer community
 
 ## 📝 License
 

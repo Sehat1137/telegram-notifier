@@ -1,0 +1,36 @@
+import requests
+import traceback
+import time
+
+
+class Telegram:
+    def __init__(
+        self,
+        chat_id: str,
+        bot_token: str,
+        attempt_count: int,
+        message_thread_id: str | int | None,
+    ) -> None:
+        self._chat_id = chat_id
+        self._bot_token = bot_token
+        self._attempt_count = attempt_count
+        self._message_thread_id = message_thread_id
+
+    def send_message(self, payload: dict) -> bool:
+        count = 0
+        url = f"https://api.telegram.org/bot{self._bot_token}/sendMessage"
+        payload["chat_id"] = self._chat_id
+        if self._message_thread_id is not None:
+            payload["message_thread_id"] = self._message_thread_id
+        while count < self._attempt_count:
+            try:
+                response = requests.post(url, json=payload, timeout=30)
+                print(response.json())
+                response.raise_for_status()
+                return True
+            except Exception:
+                count += 1
+                traceback.print_exc()
+                time.sleep(count * 2)
+
+        return False
