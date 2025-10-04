@@ -2,6 +2,27 @@
 
 <!-- version list -->
 
+## v1.3.0 (2025-10-04)
+
+### Bug Fixes
+
+- Improve message length handling in issue formatting
+  ([`eba01f4`](https://github.com/Sehat1137/telegram-notifier/commit/eba01f4e68a2b6bcd60cd9f704c78d1e1df13e53))
+
+- Refactor action into modular components and update templates
+  ([`bcdc12e`](https://github.com/Sehat1137/telegram-notifier/commit/bcdc12e0fc23ebc7e72d751a31d3e40bd3f1fb7d))
+
+### Continuous Integration
+
+- Change release rules
+  ([`f002f6b`](https://github.com/Sehat1137/telegram-notifier/commit/f002f6b14ca21ee5111eef05217e4ebe31120061))
+
+### Features
+
+- Add new new event PR
+  ([`d14df7a`](https://github.com/Sehat1137/telegram-notifier/commit/d14df7afc41420ec6c1b6f8630c11b640caedd5d))
+
+
 ## v1.2.3 (2025-09-05)
 
 ### Bug Fixes
