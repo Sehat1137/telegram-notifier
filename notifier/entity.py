@@ -27,3 +27,21 @@ class Issue:
     url: str
     user: str
     body: str
+
+
+@dataclasses.dataclass(kw_only=True)
+class PullRequest:
+    id: int
+    title: str
+    labels: typing.Collection[str]
+    url: str
+    user: str
+    body: str
+    additions: int
+    deletions: int
+    head_ref: str
+    base_ref: str
+    repository: str
+
+
+Event = Issue | PullRequest

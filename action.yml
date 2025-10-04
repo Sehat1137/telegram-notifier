@@ -53,7 +53,7 @@ runs:
         TELEGRAM_BOT_TOKEN: ${{ inputs.tg-bot-token }}
         TELEGRAM_CHAT_ID: ${{ inputs.tg-chat-id }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        ISSUE_URL: ${{ github.event.issue.url }}
+        EVENT_URL: ${{ github.event.issue.url || github.event.pull_request.url }}
         BASE_URL: ${{ inputs.base-url }}
         ATTEMPT_COUNT: ${{ inputs.attempt-count }}
         HTML_TEMPLATE: ${{ inputs.html-template }}
