@@ -4,12 +4,12 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat&logo=python)
 ![Telegram](https://img.shields.io/badge/Telegram-Bot-blue?style=flat&logo=telegram)
 
-A GitHub Action that sends beautifully formatted Telegram notifications when new issues are created in your repository. Get instant alerts with issue details, labels as hashtags, and clean formatting.
+A GitHub Action that sends beautifully formatted Telegram notifications for new issues and pull requests in your repository. Get instant alerts with comprehensive details, labels as hashtags, and clean formatting.
 
 ## ✨ Features
 
-- **Instant Notifications**: Get real-time alerts for new issues
-- **Rich Formatting**: Clean HTML formatting with issue details
+- **Instant Notifications**: Get real-time alerts for new events
+- **Rich Formatting**: Clean HTML and MD formatting
 - **Label Support**: Automatically converts GitHub labels to Telegram hashtags
 - **Customizable**: Multiple configuration options for different needs
 - **Reliable**: Built-in retry mechanism for Telegram API
@@ -19,25 +19,34 @@ A GitHub Action that sends beautifully formatted Telegram notifications when new
 ### Basic Usage
 
 ```yaml
-name: issue
+name: Event Notifier
 
 on:
   issues:
-    types:
-      - opened
+    types: [opened, reopened]
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  issues: read
+  pull_request: read
 
 jobs:
   notify:
     name: "Telegram notification"
     runs-on: ubuntu-latest
     steps:
-      - name: Send Telegram notification for new issue
-        uses: sehat1137/telegram-notifier@v1.2.3
+      - name: Send Telegram notification for new issue or pull request
+        uses: sehat1137/telegram-notifier@v1.3.0
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+**Real usage examples:**
+1. [FastStream](https://github.com/ag2ai/faststream/blob/main/.github/workflows/new-event.yaml)
+2. [Dishka](https://github.com/reagento/dishka/blob/develop/.github/workflows/new-event.yml)
 
 ### Advanced Configuration
 
@@ -83,11 +92,25 @@ jobs:
 
 Your Telegram notifications will look like this:
 
+Issue:
 ```text
 🚀 New issue by @username
 📌 Bug in authentication module (#123)
 
 [Issue description content here...]
+
+#bug #high_priority #authentication
+sent via telegram-notifier
+```
+
+Pull requests:
+```text
+🎉 New Pull Request to test/repo by @username
+✨ Update .gitignore (#3)
+📊 +1/-0
+🌿 Sehat1137:test → master
+
+[Pull requests description content here...]
 
 #bug #high_priority #authentication
 sent via telegram-notifier
