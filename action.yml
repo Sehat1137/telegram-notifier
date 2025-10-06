@@ -14,7 +14,7 @@ inputs:
     required: false
   github-token:
     description: "GitHub Token for API access"
-    required: true
+    required: false
   base-url:
     description: "Base URL for sulguk"
     required: false

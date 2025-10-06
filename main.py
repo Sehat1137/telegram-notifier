@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     github_client = Github(
         event_url=event_url,
-        token=os.environ["GITHUB_TOKEN"],
+        token=(os.environ.get("GITHUB_TOKEN") or "").strip(),
         event_type=event_type,
     )
 

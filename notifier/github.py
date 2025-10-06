@@ -24,11 +24,7 @@ class Github:
         return self._md_events[self._event_type]()
 
     def _get_html_issue(self) -> Issue:
-        headers = {
-            "Accept": "application/vnd.github.html+json",
-            "Authorization": f"Bearer {self._token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
+        headers = self._get_headers({"Accept": "application/vnd.github.v3.html+json"})
 
         response = requests.get(self._url, headers=headers, timeout=30)
         response.raise_for_status()
@@ -48,11 +44,8 @@ class Github:
         )
 
     def _get_html_pr(self) -> PullRequest:
-        headers = {
-            "Accept": "application/vnd.github.v3.html+json",
-            "Authorization": f"Bearer {self._token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
+        headers = self._get_headers({"Accept": "application/vnd.github.v3.html+json"})
+
         response = requests.get(self._url, headers=headers, timeout=30)
         response.raise_for_status()
 
@@ -76,11 +69,8 @@ class Github:
         )
 
     def _get_md_issue(self) -> Issue:
-        headers = {
-            "Accept": "application/vnd.github.v3.raw+json",
-            "Authorization": f"Bearer {self._token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
+        headers = self._get_headers({"Accept": "application/vnd.github.v3.raw+json"})
+
         response = requests.get(self._url, headers=headers, timeout=30)
         response.raise_for_status()
 
@@ -99,11 +89,8 @@ class Github:
         )
 
     def _get_md_pr(self) -> PullRequest:
-        headers = {
-            "Accept": "application/vnd.github.v3.raw+json",
-            "Authorization": f"Bearer {self._token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
+        headers = self._get_headers({"Accept": "application/vnd.github.v3.raw+json"})
+
         response = requests.get(self._url, headers=headers, timeout=30)
         response.raise_for_status()
 
@@ -125,3 +112,11 @@ class Github:
             base_ref=pr_data["base"]["ref"],
             repository=pr_data["base"]["repo"]["full_name"],
         )
+
+    def _get_headers(self, extra: dict) -> dict:
+        headers = {
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        if self._token:
+            headers["Authorization"] = f"Bearer {self._token}"
+        return {**headers, **extra}
