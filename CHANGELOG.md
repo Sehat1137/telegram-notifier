@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.4.0 (2025-10-06)
+
+### Documentation
+
+- Update readme
+  ([`ff6a0b6`](https://github.com/Sehat1137/telegram-notifier/commit/ff6a0b676c5adf883a953652c75a073b15cd1757))
+
+### Features
+
+- Event support without GITHUB_TOKEN
+  ([`3ebd7b4`](https://github.com/Sehat1137/telegram-notifier/commit/3ebd7b43587c33fa5c0bc512390602bfda2845ca))
+
+
 ## v1.3.0 (2025-10-04)
 
 ### Bug Fixes
