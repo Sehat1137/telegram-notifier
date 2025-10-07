@@ -1,3 +1,4 @@
+import sys
 import requests
 import traceback
 import time
@@ -25,12 +26,14 @@ class Telegram:
         while count < self._attempt_count:
             try:
                 response = requests.post(url, json=payload, timeout=30)
-                print(response.json())
                 response.raise_for_status()
-                return True
             except Exception:
+                print(response.content, file=sys.stderr)
                 count += 1
                 traceback.print_exc()
                 time.sleep(count * 2)
+            else:
+                print(response.json())
+                return True
 
         return False
