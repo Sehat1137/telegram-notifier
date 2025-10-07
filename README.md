@@ -37,15 +37,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram notification for new issue or pull request
-        uses: sehat1137/telegram-notifier@v1.4.0
+        uses: sehat1137/telegram-notifier@v1.4.1
+        github-token: ${{ secrets.GITHUB_TOKEN }}  # we recommend for use
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
 ```
 
+> We recommend using a github-token, although it's not required for public projects and is unlikely to hit any [limits](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#primary-rate-limit-for-unauthenticated-users). However, github actions uses IP-based limits, and since github actions has a limited pool of addresses, these limits are considered public, and you'll hit them very quickly.
+
 **Real usage examples:**
 1. [FastStream](https://github.com/ag2ai/faststream/blob/main/.github/workflows/new-event.yaml)
 2. [Dishka](https://github.com/reagento/dishka/blob/develop/.github/workflows/new-event.yml)
+3. [wemake-python-styleguide](https://github.com/wemake-services/wemake-python-styleguide/blob/master/.github/workflows/new-event-notify.yml)
 
 ### Advanced Configuration
 
