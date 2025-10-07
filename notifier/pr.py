@@ -19,7 +19,7 @@ HTML_TEMPLATE: typing.Final = (
 
 MD_TEMPLATE: typing.Final = (
     "🎉 **New Pull Request to [{repository}](https://github.com/{repository}) "
-    "by [@{user}](https://github.com/{user})]**\n"
+    "by [@{user}](https://github.com/{user})**\n"
     "✨ **{title}** ([#{id}]({url}))\n"
     "📊 +{additions}/-{deletions}\n"
     "🌿 {head_ref} → {base_ref}\n\n"
