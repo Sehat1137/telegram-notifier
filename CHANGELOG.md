@@ -2,6 +2,22 @@
 
 <!-- version list -->
 
+## v1.4.1 (2025-10-07)
+
+### Bug Fixes
+
+- Add support for input
+  ([`13a4e47`](https://github.com/Sehat1137/telegram-notifier/commit/13a4e47becc25c5955dc6cfce58cedd15e45969f))
+
+- Typo MD template PR
+  ([`3411866`](https://github.com/Sehat1137/telegram-notifier/commit/34118668d9efc950ec06f9a3e2cd3a1a3e9e2b63))
+
+### Documentation
+
+- Update readme
+  ([`fa078c4`](https://github.com/Sehat1137/telegram-notifier/commit/fa078c4641716c8db5cc74a16be2dde25d0cd60d))
+
+
 ## v1.4.0 (2025-10-07)
 
 ### Bug Fixes
