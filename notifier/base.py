@@ -89,8 +89,8 @@ class BaseMDSender(BaseSender):
         labels = ""
         if event.labels:
             labels = f"\n{' '.join(f'#{label}' for label in event.labels)}\n"
-
         message = self._create_message(event, f"{event.body}\n", labels)
+        message = message.replace("[x]", "☑️").replace("[ ]", "⬜️")
         result = md2tgmd.escape(message)
         if len(result) <= self._limit:
             return result
