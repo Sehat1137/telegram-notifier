@@ -26,7 +26,7 @@ inputs:
   attempt-count:
     description: "Telegram API attempt count"
     required: false
-    default: "10"
+    default: "2"
   html-template:
     description: "HTML template for Telegram message"
     required: false

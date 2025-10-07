@@ -1,6 +1,5 @@
 import sys
 import requests
-import traceback
 import time
 
 
@@ -24,13 +23,12 @@ class Telegram:
         if self._message_thread_id is not None:
             payload["message_thread_id"] = self._message_thread_id
         while count < self._attempt_count:
+            response = requests.post(url, json=payload, timeout=30)
             try:
-                response = requests.post(url, json=payload, timeout=30)
                 response.raise_for_status()
-            except Exception:
+            except requests.exceptions.HTTPError:
                 print(response.content, file=sys.stderr)
                 count += 1
-                traceback.print_exc()
                 time.sleep(count * 2)
             else:
                 print(response.json())
