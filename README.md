@@ -58,6 +58,8 @@ jobs:
     base-url: "https://github.com/your-org/your-repo"
     python-version: "3.10"
     attempt-count: "5"
+    # if you want to join the input with a list of labels
+    join-input-with-list: "1"
     # if you have topics
     telegram-message-thread-id: 2
     # by default templates exist, these parameters override them
