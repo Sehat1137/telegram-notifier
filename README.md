@@ -120,8 +120,7 @@ sent via relator
 
 ## 🤝 Acknowledgments
 
-This action uses the excellent [sulguk](https://github.com/Tishka17/sulguk) library by `@Tishka17` for reliable Telegram message delivery. Special thanks to the author for creating and maintaining this wonderful library!
-We also thank the authors of the [md2tgmd](https://github.com/yym68686/md2tgmd) library for their work. Special thanks to the authors for creating and maintaining these wonderful libraries!
+This action uses the excellent [sulguk](https://github.com/Tishka17/sulguk) library by `@Tishka17` for reliable Telegram message delivery. We also thank the authors of the [md2tgmd](https://github.com/yym68686/md2tgmd) library for their work.
 
 ## 🌟 Support
 
