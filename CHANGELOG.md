@@ -2,6 +2,25 @@
 
 <!-- version list -->
 
+## v1.5.0 (2025-10-13)
+
+### Chores
+
+- Migrate project to reagento
+  ([`7cd0b0f`](https://github.com/reagento/relator/commit/7cd0b0f266f1339bf3c0351023aacc77740f68f3))
+
+- Update sulguk
+  ([`a825396`](https://github.com/reagento/relator/commit/a825396feb6a6bf111298d29d98ff484cf283548))
+
+### Features
+
+- Add new render options JOIN_INPUT_WITH_LIST
+  ([`f8abad8`](https://github.com/reagento/relator/commit/f8abad843a45ea0a067e8c50441fd01d57e19186))
+
+- Add repository to issue
+  ([`66f5d86`](https://github.com/reagento/relator/commit/66f5d865df308a5fb093071b733503f68106214c))
+
+
 ## v1.4.1 (2025-10-07)
 
 ### Bug Fixes
