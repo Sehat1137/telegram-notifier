@@ -1,5 +1,5 @@
-name: "Telegram Issue Notifier"
-description: "Send Telegram notifications for new GitHub issues"
+name: "Relator"
+description: "Send Telegram notifications for new GitHub issues or PRs"
 author: "Sehat1137"
 
 inputs:
