@@ -28,6 +28,10 @@ class Issue:
     user: str
     body: str
 
+    @property
+    def repository(self) -> str:
+        return f"{self.url.split('/')[3]}/{self.url.split('/')[4]}"
+
 
 @dataclasses.dataclass(kw_only=True)
 class PullRequest:

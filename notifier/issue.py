@@ -8,14 +8,14 @@ from notifier.base import BaseMDSender, BaseHTMLSender, RenderConfig
 
 
 HTML_TEMPLATE: typing.Final = (
-    "🚀 <b>New issue by <a href=/{user}>@{user}</a> </b><br/>"
+    "🚀 <b>New issue to <a href=/{repository}>{repository}</a> by <a href=/{user}>@{user}</a> </b><br/>"
     "📝 <b>{title}</b> (<a href='{url}'>#{id}</a>)<br/>"
     "{body}"
     "{labels}<br/>"
     "{promo}"
 )
 MD_TEMPLATE: typing.Final = (
-    "🚀 **New issue by [@{user}](https://github.com/{user})**\n"
+    "🚀 **New issue to [{repository}](https://github.com/{repository}) by [@{user}](https://github.com/{user})**\n"
     "📝 **{title}** ([#{id}]({url}))\n\n"
     "{body}"
     "{labels}\n"
@@ -32,6 +32,7 @@ class IssueHTMLSender(BaseHTMLSender):
             labels=labels,
             url=event.url,
             body=self._format_body(body),
+            repository=event.repository,
             promo="<a href='/reagento/relator'>sent via relator</a>",
         )
 

@@ -23,7 +23,7 @@ class Telegram:
         if self._message_thread_id is not None:
             payload["message_thread_id"] = self._message_thread_id
         while count < self._attempt_count:
-            response = requests.post(url, json=payload, timeout=30)
+            response = requests.post(url, json=payload, timeout=30, verify=False)
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError:
