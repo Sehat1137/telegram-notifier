@@ -43,7 +43,7 @@ class PRHTMLSender(BaseHTMLSender):
             head_ref=event.head_ref,
             base_ref=event.base_ref,
             repository=event.repository,
-            promo="<a href='/Sehat1137/telegram-notifier'>sent via telegram-notifier</a>",
+            promo="<a href='/reagento/relator'>sent via relator</a>",
         )
 
 
@@ -61,7 +61,7 @@ class PRMDSender(BaseMDSender):
             head_ref=event.head_ref,
             base_ref=event.base_ref,
             repository=event.repository,
-            promo="[sent via telegram-notifier](https://github.com/Sehat1137/telegram-notifier)",
+            promo="[sent via relator](https://github.com/reagento/relator)",
         )
 
 

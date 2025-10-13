@@ -32,7 +32,7 @@ class IssueHTMLSender(BaseHTMLSender):
             labels=labels,
             url=event.url,
             body=body,
-            promo="<a href='/Sehat1137/telegram-notifier'>sent via telegram-notifier</a>",
+            promo="<a href='/reagento/relator'>sent via relator</a>",
         )
 
 
@@ -45,7 +45,7 @@ class IssueMDSender(BaseMDSender):
             labels=labels,
             url=event.url,
             body=body,
-            promo="[sent via telegram-notifier](https://github.com/Sehat1137/telegram-notifier)",
+            promo="[sent via relator](https://github.com/reagento/relator)",
         )
 
 

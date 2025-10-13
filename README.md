@@ -1,10 +1,10 @@
-# Telegram Notifier 🔔
+# Relator 🔔
 
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-success?style=flat&logo=githubactions)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat&logo=python)
 ![Telegram](https://img.shields.io/badge/Telegram-Bot-blue?style=flat&logo=telegram)
 
-A GitHub Action that sends beautifully formatted Telegram notifications for new issues and pull requests in your repository. Get instant alerts with comprehensive details, labels as hashtags, and clean formatting.
+**Relator** (Latin _referre_ - "to report") - delivers beautifully formatted GitHub notifications to Telegram. Get instant alerts for issues and PRs with smart labeling and clean formatting, keeping your team informed in real-time.
 
 ## ✨ Features
 
@@ -37,25 +37,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram notification for new issue or pull request
-        uses: sehat1137/telegram-notifier@v1.4.1
-        github-token: ${{ secrets.GITHUB_TOKEN }}  # we recommend for use
+        uses: reagento/relator@v1.4.1
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }} # we recommend for use
 ```
 
 > We recommend using a github-token, although it's not required for public projects and is unlikely to hit any [limits](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#primary-rate-limit-for-unauthenticated-users). However, github actions uses IP-based limits, and since github actions has a limited pool of addresses, these limits are considered public, and you'll hit them very quickly.
-
-**Real usage examples:**
-1. [FastStream](https://github.com/ag2ai/faststream/blob/main/.github/workflows/new-event.yaml)
-2. [Dishka](https://github.com/reagento/dishka/blob/develop/.github/workflows/new-event.yml)
-3. [wemake-python-styleguide](https://github.com/wemake-services/wemake-python-styleguide/blob/master/.github/workflows/new-event-notify.yml)
 
 ### Advanced Configuration
 
 ```yaml
 - name: Send Telegram notification for new issue
-  uses: sehat1137/telegram-notifier@v1.2.3
+  uses: reagento/relator@v1.4.1
   with:
     tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
@@ -96,6 +91,7 @@ jobs:
 Your Telegram notifications will look like this:
 
 Issue:
+
 ```text
 🚀 New issue by @username
 📌 Bug in authentication module (#123)
@@ -103,10 +99,11 @@ Issue:
 [Issue description content here...]
 
 #bug #high_priority #authentication
-sent via telegram-notifier
+sent via relator
 ```
 
 Pull requests:
+
 ```text
 🎉 New Pull Request to test/repo by @username
 ✨ Update .gitignore (#3)
@@ -116,7 +113,7 @@ Pull requests:
 [Pull requests description content here...]
 
 #bug #high_priority #authentication
-sent via telegram-notifier
+sent via relator
 ```
 
 ## 🤝 Acknowledgments
@@ -136,3 +133,13 @@ If you find this action useful, please consider:
 ## 📝 License
 
 This project is open source and available under the [MIT License](https://opensource.org/licenses/MIT).
+
+## ⚙️ Used by
+
+**Relator** is used by many open source projects here we highlight a few:
+
+| Project                                                                        | Logo                                               | Description                                               |
+| ------------------------------------------------------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
+| [FastStream](https://github.com/ag2ai/faststream)                              | <img src=".static/faststream.svg" width="45">      | FastStream is a powerful and easy-to-use Python framework |
+| [Dishka](https://github.com/reagento/dishka)                                   | <img src=".static/reagento.png" width="45">        | Cute dependency injection (DI) framework for Python       |
+| [wemake.services](https://github.com/wemake-services/wemake-python-styleguide) | <img src=".static/wemake-services.png" width="45"> | The strictest and most opinionated python linter ever!    |
