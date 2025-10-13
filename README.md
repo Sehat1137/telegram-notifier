@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram notification for new issue or pull request
-        uses: reagento/relator@v2.0.0
+        uses: reagento/relator@v1.5.0
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
@@ -50,7 +50,7 @@ jobs:
 
 ```yaml
 - name: Send Telegram notification for new issue
-  uses: reagento/relator@v2.0.0
+  uses: reagento/relator@v1.5.0
   with:
     tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
@@ -58,6 +58,8 @@ jobs:
     base-url: "https://github.com/your-org/your-repo"
     python-version: "3.10"
     attempt-count: "5"
+    # if you want to join the input with a list of labels
+    join-input-with-list: "1"
     # if you have topics
     telegram-message-thread-id: 2
     # by default templates exist, these parameters override them
@@ -140,6 +142,6 @@ This project is open source and available under the [MIT License](https://openso
 
 | Project                                                                        | Logo                                               | Description                                               |
 | ------------------------------------------------------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
-| [FastStream](https://github.com/ag2ai/faststream)                              | <img src=".static/faststream.svg" width="45">      | FastStream is a powerful and easy-to-use Python framework |
+| [FastStream](https://github.com/ag2ai/faststream)                              | <img src=".static/faststream.png" width="45">      | FastStream is a powerful and easy-to-use Python framework |
 | [Dishka](https://github.com/reagento/dishka)                                   | <img src=".static/reagento.png" width="45">        | Cute dependency injection (DI) framework for Python       |
 | [wemake.services](https://github.com/wemake-services/wemake-python-styleguide) | <img src=".static/wemake-services.png" width="45"> | The strictest and most opinionated python linter ever!    |
