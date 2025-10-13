@@ -1,4 +1,4 @@
-name: "Relator"
+name: "reagento/relator"
 description: "Send Telegram notifications for new GitHub issues or PRs"
 author: "Sehat1137"
 
