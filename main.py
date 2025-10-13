@@ -7,6 +7,7 @@ from notifier import issue, pr
 from notifier.telegram import Telegram
 from notifier.github import Github
 from notifier.entity import Event, Issue, PullRequest
+from notifier.base import RenderConfig
 
 MAX_TG_MESSAGE_LENGTH: typing.Final = 4096
 
@@ -14,11 +15,12 @@ MAX_TG_MESSAGE_LENGTH: typing.Final = 4096
 class Handler(typing.Protocol):
     def send(
         self,
+        *,
         html_template: str,
         md_template: str,
         github: Github,
         telegram: Telegram,
-        limit: int,
+        render_config: RenderConfig,
     ) -> None: ...
 
 
@@ -62,5 +64,8 @@ if __name__ == "__main__":
         md_template=md_template,
         github=github_client,
         telegram=telegram_client,
-        limit=MAX_TG_MESSAGE_LENGTH,
+        render_config=RenderConfig(
+            message_limit=MAX_TG_MESSAGE_LENGTH,
+            join_input_with_list=os.environ.get("JOIN_INPUT_WITH_LIST") == "1",
+        ),
     )

@@ -1,12 +1,20 @@
 import abc
 import typing
 import traceback
+import dataclasses
 
+import bs4
 import sulguk
 import md2tgmd
 
 from notifier.github import Github
 from notifier.telegram import Telegram
+
+
+@dataclasses.dataclass(frozen=True, kw_only=True)
+class RenderConfig:
+    message_limit: int
+    join_input_with_list: bool
 
 
 class BaseSender(abc.ABC):
@@ -15,12 +23,12 @@ class BaseSender(abc.ABC):
         template: str,
         github: Github,
         telegram: Telegram,
-        limit: int,
+        render_config: RenderConfig,
     ) -> None:
         self._template = template
         self._github = github
         self._telegram = telegram
-        self._limit = limit
+        self._render_config = render_config
 
     @abc.abstractmethod
     def _create_message(self, event: typing.Any, body: str, labels: str) -> str: ...
@@ -50,13 +58,13 @@ class BaseHTMLSender(BaseSender):
         if event.labels:
             labels = f"{' '.join(f'#{label}' for label in event.labels)}<br/>"
 
-        message = self._create_message(event, event.body, labels)
+        message = self._create_message(event, self._format_body(event.body), labels)
 
         render_result = sulguk.transform_html(
             message,
             base_url="https://github.com",
         )
-        if len(render_result.text) <= self._limit:
+        if len(render_result.text) <= self._render_config.message_limit:
             return render_result
 
         message_without_description = self._create_message(event, "<br/>", labels)
@@ -65,6 +73,17 @@ class BaseHTMLSender(BaseSender):
             message_without_description,
             base_url="https://github.com",
         )
+
+    def _format_body(self, body: str) -> str:
+        if not self._render_config.join_input_with_list:
+            return body
+        soup = bs4.BeautifulSoup(body)
+        for ul in soup.find_all("ul"):
+            if ul.find("input"):
+                ul.name = "div"
+                for li in ul.find_all("li"):
+                    li.name = "div"
+        return str(soup)
 
 
 class BaseMDSender(BaseSender):
@@ -90,9 +109,8 @@ class BaseMDSender(BaseSender):
         if event.labels:
             labels = f"\n{' '.join(f'#{label}' for label in event.labels)}\n"
         message = self._create_message(event, f"{event.body}\n", labels)
-        message = message.replace("[x]", "☑️").replace("[ ]", "⬜️")
         result = md2tgmd.escape(message)
-        if len(result) <= self._limit:
+        if len(result) <= self._render_config.message_limit:
             return result
 
         message_with_body = self._create_message(event, "", labels)

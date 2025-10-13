@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram notification for new issue or pull request
-        uses: reagento/relator@v1.4.1
+        uses: reagento/relator@v2.0.0
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
@@ -50,7 +50,7 @@ jobs:
 
 ```yaml
 - name: Send Telegram notification for new issue
-  uses: reagento/relator@v1.4.1
+  uses: reagento/relator@v2.0.0
   with:
     tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}

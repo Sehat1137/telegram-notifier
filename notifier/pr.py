@@ -2,7 +2,7 @@ import sys
 import typing
 
 from notifier.entity import PullRequest
-from notifier.base import BaseMDSender, BaseHTMLSender
+from notifier.base import BaseMDSender, BaseHTMLSender, RenderConfig
 from notifier.github import Github
 from notifier.telegram import Telegram
 
@@ -66,18 +66,19 @@ class PRMDSender(BaseMDSender):
 
 
 def send(
+    *,
     html_template: str,
     md_template: str,
     github: Github,
     telegram: Telegram,
-    limit: int,
+    render_config: RenderConfig,
 ) -> None:
-    html = PRHTMLSender(html_template or HTML_TEMPLATE, github, telegram, limit)
+    html = PRHTMLSender(html_template or HTML_TEMPLATE, github, telegram, render_config)
 
     if html.send_message():
         sys.exit(0)
 
-    md = PRMDSender(md_template or MD_TEMPLATE, github, telegram, limit)
+    md = PRMDSender(md_template or MD_TEMPLATE, github, telegram, render_config)
 
     if md.send_message():
         sys.exit(0)

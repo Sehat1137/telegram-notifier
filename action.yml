@@ -33,6 +33,10 @@ inputs:
   md-template:
     description: "Markdown template for Telegram message"
     required: false
+  join-input-with-list:
+    description: "Join input with bulleted list for rendering like github"
+    required: true
+    default: "0"
 
 runs:
   using: "composite"
@@ -59,6 +63,7 @@ runs:
         HTML_TEMPLATE: ${{ inputs.html-template }}
         MD_TEMPLATE: ${{ inputs.md-template }}
         TELEGRAM_MESSAGE_THREAD_ID: ${{ inputs.tg-message-thread-id }}
+        JOIN_INPUT_WITH_LIST: ${{ inputs.join-input-with-list }}
       run: |
         python3 $GITHUB_ACTION_PATH/main.py
 

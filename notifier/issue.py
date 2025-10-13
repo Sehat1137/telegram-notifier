@@ -4,7 +4,7 @@ import typing
 from notifier.telegram import Telegram
 from notifier.github import Github
 from notifier.entity import Issue
-from notifier.base import BaseMDSender, BaseHTMLSender
+from notifier.base import BaseMDSender, BaseHTMLSender, RenderConfig
 
 
 HTML_TEMPLATE: typing.Final = (
@@ -31,7 +31,7 @@ class IssueHTMLSender(BaseHTMLSender):
             title=event.title,
             labels=labels,
             url=event.url,
-            body=body,
+            body=self._format_body(body),
             promo="<a href='/reagento/relator'>sent via relator</a>",
         )
 
@@ -50,18 +50,21 @@ class IssueMDSender(BaseMDSender):
 
 
 def send(
+    *,
     html_template: str,
     md_template: str,
     github: Github,
     telegram: Telegram,
-    limit: int,
+    render_config: RenderConfig,
 ) -> None:
-    html = IssueHTMLSender(html_template or HTML_TEMPLATE, github, telegram, limit)
+    html = IssueHTMLSender(
+        html_template or HTML_TEMPLATE, github, telegram, render_config
+    )
 
     if html.send_message():
         sys.exit(0)
 
-    md = IssueMDSender(md_template or MD_TEMPLATE, github, telegram, limit)
+    md = IssueMDSender(md_template or MD_TEMPLATE, github, telegram, render_config)
 
     if md.send_message():
         sys.exit(0)
