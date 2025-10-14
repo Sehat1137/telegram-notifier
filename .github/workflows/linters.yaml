@@ -2,9 +2,9 @@ name: Linters
 
 on:
   push:
-    branches: ["main", "master"]
+    branches: [ "master" ]
   pull_request:
-    branches: ["main", "master"]
+    branches: [ "master" ]
 
 jobs:
   ruff:
@@ -18,8 +18,24 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install Ruff
-        run: pip install ruff
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
 
       - name: Run Ruff
         run: ruff check .
+  mypy:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v5
+
+        - name: Set up Python
+          uses: actions/setup-python@v6
+          with:
+            python-version: "3.10"
+
+        - name: Install dependencies
+          run: pip install -r requirements-dev.txt
+
+        - name: Run mypy (type checking)
+          run: mypy .
