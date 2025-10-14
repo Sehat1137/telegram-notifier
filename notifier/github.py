@@ -1,4 +1,5 @@
 import requests
+import typing
 
 from notifier.entity import Event, Issue, PullRequest, parse_label
 
@@ -8,11 +9,11 @@ class Github:
         self._event_type = event_type
         self._token = token
         self._url = event_url
-        self._html_events = {
+        self._html_events: dict[type[Event], typing.Callable[[], Event]] = {
             Issue: self._get_html_issue,
             PullRequest: self._get_html_pr,
         }
-        self._md_events = {
+        self._md_events: dict[type[Event], typing.Callable[[], Event]] = {
             Issue: self._get_md_issue,
             PullRequest: self._get_md_pr,
         }
