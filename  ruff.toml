@@ -1,0 +1,24 @@
+#target-version = "py310"
+#
+#select = [
+#    "E", # pycodestyle errors
+#    "W", # pycodestyle warnings
+#    "F", # pyflakes
+#    "I", # isort
+#    "UP", # pyupgrade
+#    "C4", # flake8-comprehensions
+#    "B", # flake8-bugbear
+#    "SIM", # flake8-simplify
+#]
+
+#ignore = [
+#    "E501", # line too long
+#]
+
+extend-exclude = [
+    "venv",
+    ".venv",
+    "build",
+    "dist",
+    "*.egg-info",
+]
