@@ -1,3 +1,4 @@
 -r requirements.txt
 ruff>=0.14.0
 mypy>=1.18.2
+basedpyright >= 1.31.7

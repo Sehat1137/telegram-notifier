@@ -1,19 +1,34 @@
-#target-version = "py310"
-#
-#select = [
-#    "E", # pycodestyle errors
-#    "W", # pycodestyle warnings
-#    "F", # pyflakes
-#    "I", # isort
-#    "UP", # pyupgrade
-#    "C4", # flake8-comprehensions
-#    "B", # flake8-bugbear
-#    "SIM", # flake8-simplify
-#]
+line-length = 79
+target-version = "py310"
+include = ["notifier/**.py", "main.py"]
 
-#ignore = [
-#    "E501", # line too long
-#]
+lint.select = [
+    "ALL"
+]
+lint.ignore = [
+    "ARG",
+    "ANN",
+    "D",
+    "EM101",
+    "EM102",
+    "PT001",
+    "PT023",
+    "SIM108",
+    "RET505",
+    "PLR0913",
+    "SIM103",
+    "ISC003",
+
+    # identical by code != identical by meaning
+    "SIM114",
+
+    # awful things, never use.
+    # It makes runtime work differently from typechecker
+    "TC001",
+    "TC002",
+    "TC003",
+    "TC006",
+]
 
 extend-exclude = [
     "venv",
@@ -22,3 +37,10 @@ extend-exclude = [
     "dist",
     "*.egg-info",
 ]
+
+
+[lint.isort]
+no-lines-before = ["local-folder"]
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "parents"
