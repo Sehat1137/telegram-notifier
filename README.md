@@ -144,3 +144,4 @@ This project is open source and available under the [MIT License](https://openso
 | [FastStream](https://github.com/ag2ai/faststream)                              | <img src=".static/faststream.png" width="45">      | FastStream is a powerful and easy-to-use Python framework |
 | [Dishka](https://github.com/reagento/dishka)                                   | <img src=".static/reagento.png" width="45">        | Cute dependency injection (DI) framework for Python       |
 | [wemake.services](https://github.com/wemake-services/wemake-python-styleguide) | <img src=".static/wemake-services.png" width="45"> | The strictest and most opinionated python linter ever!    |
+| [easyp](https://github.com/easyp-tech/easyp)                                   | <img src=".static/easyp.png" width="45">           | Easyp is a cli tool for workflows with proto files.       |
