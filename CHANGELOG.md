@@ -2,6 +2,39 @@
 
 <!-- version list -->
 
+## v1.5.1 (2025-10-17)
+
+### Bug Fixes
+
+- Repair render
+  ([`e981efa`](https://github.com/reagento/relator/commit/e981efa245d733b5ee5733e9cd709c2f14d8de28))
+
+### Chores
+
+- Add zizmor ([#13](https://github.com/reagento/relator/pull/13),
+  [`448327a`](https://github.com/reagento/relator/commit/448327a02996af1f36cb70edf8a4d8ada55d7e94))
+
+- Change marketplace name
+  ([`70a29c0`](https://github.com/reagento/relator/commit/70a29c01c116c1de64226b1be15ea8f0daeafc40))
+
+- **dev**: Add ruff.toml and mypy.ini, requirements-dev.txt, github action for ruff and mypy
+  ([#11](https://github.com/reagento/relator/pull/11),
+  [`ccded9b`](https://github.com/reagento/relator/commit/ccded9bb58a62f7d798c78f96f6fa1c1fd064d6d))
+
+### Continuous Integration
+
+- Add new workflow
+  ([`12fa9f7`](https://github.com/reagento/relator/commit/12fa9f7cdc75c2ac330f35309e5088ab5f174984))
+
+### Documentation
+
+- Extend used by ([#12](https://github.com/reagento/relator/pull/12),
+  [`be801f0`](https://github.com/reagento/relator/commit/be801f0425e6819aa99b9ae01390337f81df12f6))
+
+- Fix typo
+  ([`a14a60c`](https://github.com/reagento/relator/commit/a14a60cb90ec49b5226c01ca5fb6e3d64b46c490))
+
+
 ## v1.5.0 (2025-10-13)
 
 ### Chores
