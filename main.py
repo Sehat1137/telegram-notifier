@@ -60,7 +60,7 @@ if __name__ == "__main__":
     )
 
     handler.send(
-        html_template=md_template,
+        html_template=html_template,
         md_template=md_template,
         github=github_client,
         telegram=telegram_client,

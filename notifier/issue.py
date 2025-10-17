@@ -46,6 +46,7 @@ class IssueMDSender(BaseMDSender):
             labels=labels,
             url=event.url,
             body=body,
+            repository=event.repository,
             promo="[sent via relator](https://github.com/reagento/relator)",
         )
 
