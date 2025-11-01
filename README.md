@@ -1,4 +1,4 @@
-# Relator 🔔
+# Relator <a href="https://github.com/marketplace/actions/reagento-relator">🔔</a>
 
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-success?style=flat&logo=githubactions)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat&logo=python)
@@ -37,20 +37,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram notification for new issue or pull request
-        uses: reagento/relator@v1.5.2
+        uses: reagento/relator@v1.6.0
         with:
           tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
-          github-token: ${{ secrets.GITHUB_TOKEN }} # we recommend for use
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-> We recommend using a github-token, although it's not required for public projects and is unlikely to hit any [limits](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#primary-rate-limit-for-unauthenticated-users). However, github actions uses IP-based limits, and since github actions has a limited pool of addresses, these limits are considered public, and you'll hit them very quickly.
+> github-token it's not required for public projects and is unlikely to hit any [limits](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#primary-rate-limit-for-unauthenticated-users). However, github actions uses IP-based limits, and since github actions has a limited pool of addresses, these limits are considered public, and you'll hit them very quickly.
 
 ### Advanced Configuration
 
 ```yaml
 - name: Send Telegram notification for new issue
-  uses: reagento/relator@v1.5.2
+  uses: reagento/relator@v1.6.0
   with:
     tg-bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     tg-chat-id: ${{ vars.TELEGRAM_CHAT_ID }}
@@ -64,7 +64,8 @@ jobs:
     telegram-message-thread-id: 2
     # by default templates exist, these parameters override them
     html-template: "<b>New issue by <a href=/{user}>@{user}</a> </b><br/><b>{title}</b> (<a href='{url}'>#{id}</a>)<br/>{body}{labels}<br/>{promo}"
-    md-template: '**New issue by [@{user}](https://github.com/{user})**\n**{title}** ([#{id}]({url}))\n\n{body}{labels}\n{promo}'
+    # Custom tags to add to every notification (comma-separated)
+    custom-labels: "my_project,custom,etc"
 ```
 
 ## 🔧 Setup Instructions
@@ -120,7 +121,7 @@ sent via relator
 
 ## 🤝 Acknowledgments
 
-This action uses the excellent [sulguk](https://github.com/Tishka17/sulguk) library by `@Tishka17` for reliable Telegram message delivery. We also thank the authors of the [md2tgmd](https://github.com/yym68686/md2tgmd) library for their work.
+This action uses the excellent [sulguk](https://github.com/Tishka17/sulguk) library by `@Tishka17` for reliable Telegram message delivery
 
 ## 🌟 Support
 
