@@ -30,13 +30,13 @@ inputs:
   html-template:
     description: "HTML template for Telegram message"
     required: false
-  md-template:
-    description: "Markdown template for Telegram message"
-    required: false
   join-input-with-list:
     description: "Join input with bulleted list for rendering like github"
     required: true
     default: "0"
+  custom-labels:
+    description: "Custom labels to add to every notification (comma-separated)"
+    required: false
 
 runs:
   using: "composite"
@@ -64,8 +64,9 @@ runs:
         MD_TEMPLATE: ${{ inputs.md-template }}
         TELEGRAM_MESSAGE_THREAD_ID: ${{ inputs.tg-message-thread-id }}
         JOIN_INPUT_WITH_LIST: ${{ inputs.join-input-with-list }}
+        CUSTOM_LABELS: ${{ inputs.custom-labels }}
       run: |
-        python3 $GITHUB_ACTION_PATH/main.py
+        cd $GITHUB_ACTION_PATH && python3 -m notifier
 
 branding:
   icon: "message-circle"
