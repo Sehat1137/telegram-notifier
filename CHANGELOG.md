@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v1.6.0 (2025-11-05)
+
+### Chores
+
+- Refactor codebase to use clean architecture with dedicated modules
+  ([#15](https://github.com/reagento/relator/pull/15),
+  [`b6df68a`](https://github.com/reagento/relator/commit/b6df68a7398bd4661918748f0bfeb51a9154e14c))
+
+### Features
+
+- Support github tables ([#16](https://github.com/reagento/relator/pull/16),
+  [`8f09fca`](https://github.com/reagento/relator/commit/8f09fca8c4214c892dd1580da3ae10f10e9ab66b))
+
+
 ## v1.5.1 (2025-10-17)
 
 ### Bug Fixes
