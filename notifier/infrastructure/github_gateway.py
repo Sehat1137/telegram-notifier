@@ -1,27 +1,7 @@
-import re
-import sys
-
 import requests
-import sulguk
 
 from notifier.application import interfaces
 from notifier.domain.entities import Issue, PullRequest
-
-
-def parse_label(raw_label: str) -> str:
-    """
-    Bug Report -> bug_report
-    high-priority -> high_priority
-    Feature Request!!! -> feature_request
-    Version 2.0 -> version_20
-    Critical Bug - Urgent!!! -> critical_bug___urgent
-    Багрепорт - ...
-    already_normalized -> already_normalized
-    Test@#$%^&*()Label -> testlabel
-    ... -> ...
-    """
-    parsed_label = raw_label.lower().replace(" ", "_").replace("-", "_")
-    return re.sub(r"[^a-zA-Z0-9_]", "", parsed_label)
 
 
 class GithubGateway(interfaces.Github):
@@ -44,14 +24,10 @@ class GithubGateway(interfaces.Github):
         return Issue(
             id=data["number"],
             title=data["title"],
-            labels=[
-                parse_label(label["name"])
-                for label in data["labels"]
-                if parse_label(label["name"])
-            ],
+            labels=[label["name"] for label in data["labels"]],
             url=(data["html_url"] or "").strip(),
             user=data["user"]["login"],
-            body=self._get_body(data),
+            body=(data.get("body_html", "") or "").strip(),
         )
 
     def get_pull_request(self) -> PullRequest:
@@ -69,28 +45,13 @@ class GithubGateway(interfaces.Github):
         return PullRequest(
             id=data["number"],
             title=data["title"],
-            labels=[
-                parse_label(label["name"])
-                for label in data["labels"]
-                if parse_label(label["name"])
-            ],
+            labels=[label["name"] for label in data["labels"]],
             url=data["html_url"],
             user=data["user"]["login"],
-            body=self._get_body(data),
+            body=(data.get("body_html", "") or "").strip(),
             additions=data["additions"],
             deletions=data["deletions"],
             head_ref=data["head"]["label"],
             base_ref=data["base"]["ref"],
             repository=data["base"]["repo"]["full_name"],
         )
-
-    def _get_body(self, data: dict) -> str:
-        body = (data.get("body_html", "") or "").strip()
-        print(body)
-
-        try:
-            sulguk.transform_html(body, base_url="https://github.com")
-            return body
-        except Exception as e:
-            print(f"Error transforming HTML: {e}", file=sys.stderr)
-            return "<p></p>"
