@@ -3,6 +3,7 @@
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-success?style=flat&logo=githubactions)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat&logo=python)
 ![Telegram](https://img.shields.io/badge/Telegram-Bot-blue?style=flat&logo=telegram)
+[![CodeQL](https://github.com/reagento/relator/actions/workflows/codeql.yml/badge.svg)](https://github.com/reagento/relator/actions/workflows/codeql.yml)
 
 **Relator** (Latin _referre_ - "to report") - delivers beautifully formatted GitHub notifications to Telegram. Get instant alerts for issues and PRs with smart labeling and clean formatting, keeping your team informed in real-time.
 
